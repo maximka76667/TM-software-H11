@@ -19,7 +19,14 @@ function App() {
         <WebhookViewer />
       </div>
 
-      <Toaster {...toastConfig} />
+      <Toaster
+        {...toastConfig}
+        toastOptions={{
+          style: {
+            textAlign: "left",
+          },
+        }}
+      />
     </>
   );
 }

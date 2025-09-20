@@ -9,15 +9,25 @@ export interface UseWebSocketOptions {
   onOpen?: () => void;
   onClose?: () => void;
   onError?: (error: Event) => void;
+  onConnectAsync?: (connectAsync: () => Promise<void>) => void;
+  onConnect?: () => void;
+  onDisconnectAsync?: (disconnectAsync: () => Promise<void>) => void;
+  onDisconnect?: () => void;
 }
 
 export interface UseWebSocketReturn {
   connectionStatus: ConnectionStatus;
   messages: MetricMessage[];
   connect: () => void;
+  connectAsync: () => Promise<void>;
   disconnect: () => void;
+  disconnectAsync: () => Promise<void>;
   clearMessages: () => void;
   sendMessage: (message: string) => void;
+  onConnect?: () => void;
+  onConnectAsync?: (connectAsync: () => Promise<void>) => void;
+  onDisconnect?: () => void;
+  onDisconnectAsync?: (disconnectAsync: () => Promise<void>) => void;
 }
 
 export const useWebSocket = (
@@ -30,6 +40,10 @@ export const useWebSocket = (
     onOpen,
     onClose,
     onError,
+    onConnect,
+    onConnectAsync,
+    onDisconnect,
+    onDisconnectAsync,
   } = options;
 
   const [connectionStatus, setConnectionStatus] =
@@ -38,23 +52,34 @@ export const useWebSocket = (
 
   const wsRef = useRef<WebSocket | null>(null);
 
-  const connect = useCallback(() => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      return; // Already connected
-    }
+  const connectAsync = useCallback(() => {
+    return new Promise<void>((resolve, reject) => {
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        resolve();
+        return;
+      }
 
-    try {
-      setConnectionStatus("connecting");
-      const ws = new WebSocket(url);
-      wsRef.current = ws;
+      const timeout = setTimeout(() => {
+        reject(new Error("Connection timeout"));
+      }, 5000);
 
-      ws.onopen = () => {
-        console.log("WebSocket connected to:", url);
+      wsRef.current = new WebSocket(url);
+
+      wsRef.current.onopen = () => {
+        clearTimeout(timeout);
         setConnectionStatus("connected");
         onOpen?.();
+        resolve();
       };
 
-      ws.onmessage = (event) => {
+      wsRef.current.onerror = (error) => {
+        clearTimeout(timeout);
+        setConnectionStatus("error");
+        onError?.(error);
+        reject(new Error("Connection failed"));
+      };
+
+      wsRef.current.onmessage = (event) => {
         try {
           const receivedData: MetricMessage = JSON.parse(event.data);
 
@@ -68,30 +93,35 @@ export const useWebSocket = (
         }
       };
 
-      ws.onclose = (event) => {
-        console.log("WebSocket disconnected:", event.code, event.reason);
+      wsRef.current.onclose = () => {
         setConnectionStatus("disconnected");
         onClose?.();
       };
+    });
+  }, [url, onOpen, onError, onClose, onMessage]);
 
-      ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        setConnectionStatus("error");
-        onError?.(error);
-      };
-    } catch (error) {
-      console.error("Failed to create WebSocket connection:", error);
-      setConnectionStatus("error");
-    }
-  }, [url, onMessage, onOpen, onClose, onError]);
+  const connect = useCallback(() => {
+    connectAsync().catch((error) => {
+      console.error("Error connecting to WebSocket:", error);
+    });
+  }, [connectAsync]);
+
+  const disconnectAsync = useCallback(() => {
+    return new Promise<void>((resolve) => {
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
+      setConnectionStatus("disconnected");
+      resolve();
+    });
+  }, []);
 
   const disconnect = useCallback(() => {
-    if (wsRef.current) {
-      wsRef.current.close();
-      wsRef.current = null;
-    }
-    setConnectionStatus("disconnected");
-  }, []);
+    disconnectAsync().catch((error) => {
+      console.error("Error disconnecting from WebSocket:", error);
+    });
+  }, [disconnectAsync]);
 
   const clearMessages = useCallback(() => {
     setMessages([]);
@@ -108,19 +138,45 @@ export const useWebSocket = (
   // Auto-connect on mount
   useEffect(() => {
     if (autoConnect) {
-      connect();
+      // If onConnect is provided, use it to connect and pass the connection promise
+      // Otherwise, use the connect function
+      if (onConnectAsync) {
+        onConnectAsync(connectAsync);
+      } else {
+        connect();
+        onConnect?.();
+      }
     }
 
     return () => {
-      disconnect();
+      // If onDisconnect is provided, use it to disconnect and pass the disconnection promise
+      // Otherwise, use the disconnect function
+      if (onDisconnectAsync) {
+        onDisconnectAsync(disconnectAsync);
+      } else {
+        disconnect();
+        onDisconnect?.();
+      }
     };
-  }, [autoConnect, connect, disconnect]);
+  }, [
+    autoConnect,
+    onConnectAsync,
+    onDisconnect,
+    connect,
+    disconnect,
+    connectAsync,
+    disconnectAsync,
+    onConnect,
+    onDisconnectAsync,
+  ]);
 
   return {
     connectionStatus,
     messages,
     connect,
+    connectAsync,
     disconnect,
+    disconnectAsync,
     clearMessages,
     sendMessage,
   };

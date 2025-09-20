@@ -10,12 +10,12 @@ interface MessageCardProps {
 
 const MessageCard = ({ message, sequenceNumber }: MessageCardProps) => {
   return (
-    <Card className="border rounded-xl bg-gray-50 flex-1 py-3 shadow-md max-w-1/3">
+    <Card className="border rounded-xl bg-gray-50 flex-auto py-3 shadow-md">
       <CardHeader className="flex justify-between items-center px-3">
-        <Badge variant={"secondary"} className="text-xs text-gray-500">
+        <Badge variant={"secondary"} className="text-xs">
           {new Date(message.timestamp).toLocaleString()}
         </Badge>
-        <Badge variant={"outline"} className="text-xs text-gray-400">
+        <Badge variant={"outline"} className="text-xs">
           #{sequenceNumber}
         </Badge>
       </CardHeader>

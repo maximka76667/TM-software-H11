@@ -4,7 +4,6 @@ import { Button } from "./ui/button";
 import ConnectButton from "./ConnectButton";
 import MessageCard from "./MessageCard";
 
-import { ToastNotifications } from "@/lib/notifications";
 import { getStatusVariant, getStatusColor } from "@/lib/statusUtils";
 
 import { WEBHOOK_URL } from "@/constants/ws";
@@ -12,23 +11,13 @@ import { WEBHOOK_URL } from "@/constants/ws";
 import { useWebhookConnection } from "@/hooks/useWebSocketConnection";
 
 const WebhookViewer = () => {
-  const { connectionStatus, messages, disconnect, connect, clearMessages } =
-    useWebhookConnection();
-
-  const handleClearMessages = () => {
-    clearMessages();
-    ToastNotifications.showMessagesCleared();
-  };
-
-  const handleDisconnect = () => {
-    disconnect();
-    ToastNotifications.showDisconnecting();
-  };
-
-  const handleConnect = () => {
-    connect();
-    ToastNotifications.showConnecting();
-  };
+  const {
+    connectionStatus,
+    messages,
+    disconnect,
+    connect,
+    handleClearMessages,
+  } = useWebhookConnection();
 
   return (
     <div className="p-3 mx-auto w-full">
@@ -52,8 +41,8 @@ const WebhookViewer = () => {
 
             <ConnectButton
               connectionStatus={connectionStatus}
-              disconnect={handleDisconnect}
-              connect={handleConnect}
+              disconnect={disconnect}
+              connect={connect}
             />
             <Button
               onClick={handleClearMessages}

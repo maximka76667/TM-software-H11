@@ -45,8 +45,8 @@ const ConnectButton = ({
 
   if (connectionStatus === "error") {
     return (
-      <Button disabled {...props}>
-        Error
+      <Button onClick={connect} {...props}>
+        Retry
       </Button>
     );
   }
