@@ -1,11 +1,6 @@
+import type { ConnectionStatus } from "@/types/ConnectionsStatus";
 import type MetricMessage from "@/types/MetricMessage";
 import { useState, useEffect, useRef, useCallback } from "react";
-
-export type ConnectionStatus =
-  | "connecting"
-  | "connected"
-  | "disconnected"
-  | "error";
 
 export interface UseWebSocketOptions {
   url: string;
@@ -21,7 +16,6 @@ export interface UseWebSocketReturn {
   messages: MetricMessage[];
   connect: () => void;
   disconnect: () => void;
-  reconnect: () => void;
   clearMessages: () => void;
   sendMessage: (message: string) => void;
 }
@@ -43,7 +37,6 @@ export const useWebSocket = (
   const [messages, setMessages] = useState<MetricMessage[]>([]);
 
   const wsRef = useRef<WebSocket | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const connect = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
@@ -93,25 +86,12 @@ export const useWebSocket = (
   }, [url, onMessage, onOpen, onClose, onError]);
 
   const disconnect = useCallback(() => {
-    if (reconnectTimeoutRef.current) {
-      clearTimeout(reconnectTimeoutRef.current);
-      reconnectTimeoutRef.current = null;
-    }
-
     if (wsRef.current) {
       wsRef.current.close();
       wsRef.current = null;
     }
     setConnectionStatus("disconnected");
   }, []);
-
-  const reconnect = useCallback(() => {
-    disconnect();
-    // Small delay before reconnecting
-    reconnectTimeoutRef.current = setTimeout(() => {
-      connect();
-    }, 1000);
-  }, [disconnect, connect]);
 
   const clearMessages = useCallback(() => {
     setMessages([]);
@@ -137,7 +117,6 @@ export const useWebSocket = (
     messages,
     connect,
     disconnect,
-    reconnect,
     clearMessages,
     sendMessage,
   };

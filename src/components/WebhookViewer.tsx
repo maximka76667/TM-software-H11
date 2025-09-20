@@ -1,13 +1,16 @@
 import { useWebSocket } from "../hooks/useWebSocket";
+
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+
 import ConnectButton from "./ConnectButton";
 import MessageCard from "./MessageCard";
-import { CONSOLE_MESSAGES } from "@/constants/messages";
-import { STATUS_COLORS, STATUS_VARIANTS } from "@/constants/status";
-import { ToastNotifications } from "@/lib/notifications";
 
-const WEBHOOK_URL = "ws://localhost:3000";
+import { ToastNotifications } from "@/lib/notifications";
+import { getStatusVariant, getStatusColor } from "@/lib/statusUtils";
+
+import { CONSOLE_MESSAGES } from "@/constants/messages";
+import { WEBHOOK_URL } from "@/constants/ws";
 
 const WebhookViewer = () => {
   const { connectionStatus, messages, disconnect, connect, clearMessages } =
@@ -37,32 +40,6 @@ const WebhookViewer = () => {
     ToastNotifications.showMessagesCleared();
   };
 
-  const getStatusVariant = () => {
-    switch (connectionStatus) {
-      case "connected":
-        return STATUS_VARIANTS.CONNECTED;
-      case "connecting":
-        return STATUS_VARIANTS.CONNECTING;
-      case "error":
-        return STATUS_VARIANTS.ERROR;
-      default:
-        return STATUS_VARIANTS.DISCONNECTED;
-    }
-  };
-
-  const getStatusColor = () => {
-    switch (connectionStatus) {
-      case "connected":
-        return STATUS_COLORS.CONNECTED;
-      case "connecting":
-        return STATUS_COLORS.CONNECTING;
-      case "error":
-        return STATUS_COLORS.ERROR;
-      default:
-        return STATUS_COLORS.DISCONNECTED;
-    }
-  };
-
   const handleDisconnect = () => {
     disconnect();
     ToastNotifications.showDisconnecting();
@@ -78,8 +55,16 @@ const WebhookViewer = () => {
       <div className="bg-white rounded-lg shadow-lg p-4">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-3 w-full justify-end">
-            <Badge className={`flex items-center gap-2 ${getStatusVariant()}`}>
-              <div className={`w-2 h-2 rounded-full ${getStatusColor()}`}></div>
+            <Badge
+              className={`flex items-center gap-2 ${getStatusVariant(
+                connectionStatus
+              )}`}
+            >
+              <div
+                className={`w-2 h-2 rounded-full ${getStatusColor(
+                  connectionStatus
+                )}`}
+              ></div>
               <span className="text-sm font-medium capitalize">
                 {connectionStatus}
               </span>

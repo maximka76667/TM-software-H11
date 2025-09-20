@@ -1,5 +1,6 @@
 import { Button } from "./ui/button";
-import type { ConnectionStatus } from "@/hooks/useWebSocket";
+
+import type { ConnectionStatus } from "@/types/ConnectionsStatus";
 
 interface ConnectButtonProps {
   connectionStatus: ConnectionStatus;
