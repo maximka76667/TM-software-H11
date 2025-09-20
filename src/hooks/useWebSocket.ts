@@ -114,7 +114,7 @@ export const useWebSocket = (
     return () => {
       disconnect();
     };
-  }, [autoConnect, connect]);
+  }, [autoConnect, connect, disconnect]);
 
   return {
     connectionStatus,
