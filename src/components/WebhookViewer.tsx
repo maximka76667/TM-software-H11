@@ -9,31 +9,13 @@ import MessageCard from "./MessageCard";
 import { ToastNotifications } from "@/lib/notifications";
 import { getStatusVariant, getStatusColor } from "@/lib/statusUtils";
 
-import { CONSOLE_MESSAGES } from "@/constants/messages";
 import { WEBHOOK_URL } from "@/constants/ws";
+
+import { useWebhookConnection } from "@/hooks/useWebSocketConnection";
 
 const WebhookViewer = () => {
   const { connectionStatus, messages, disconnect, connect, clearMessages } =
-    useWebSocket({
-      url: WEBHOOK_URL,
-      autoConnect: false,
-      onMessage: (data) => {
-        ToastNotifications.showNewMessage();
-        console.log(CONSOLE_MESSAGES.NEW_MESSAGE, data);
-      },
-      onOpen: () => {
-        ToastNotifications.showConnected();
-        console.log(CONSOLE_MESSAGES.CONNECTED);
-      },
-      onClose: () => {
-        ToastNotifications.showDisconnected();
-        console.log(CONSOLE_MESSAGES.DISCONNECTED);
-      },
-      onError: (error) => {
-        ToastNotifications.showError();
-        console.error(CONSOLE_MESSAGES.WEBSOCKET_ERROR, error);
-      },
-    });
+    useWebhookConnection();
 
   const handleClearMessages = () => {
     clearMessages();
