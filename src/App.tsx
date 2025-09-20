@@ -2,6 +2,13 @@ import "./App.css";
 import { Toaster } from "./components/ui/sonner";
 import WebhookViewer from "./components/WebhookViewer";
 
+const toastConfig = {
+  position: "bottom-center" as const,
+  duration: 3000,
+  richColors: true,
+  closeButton: true,
+};
+
 function App() {
   return (
     <>
@@ -12,7 +19,7 @@ function App() {
         <WebhookViewer />
       </div>
 
-      <Toaster position="top-center" richColors />
+      <Toaster {...toastConfig} />
     </>
   );
 }

@@ -2,15 +2,10 @@ import { useWebSocket } from "../hooks/useWebSocket";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import ConnectButton from "./ConnectButton";
-import { toast } from "sonner";
-import { getFormattedDate } from "@/lib/utils";
 import MessageCard from "./MessageCard";
-import {
-  CONSOLE_MESSAGES,
-  TOAST_DESCRIPTIONS,
-  TOAST_MESSAGES,
-} from "@/constants/messages";
+import { CONSOLE_MESSAGES } from "@/constants/messages";
 import { STATUS_COLORS, STATUS_VARIANTS } from "@/constants/status";
+import { ToastNotifications } from "@/lib/notifications";
 
 const WEBHOOK_URL = "ws://localhost:3000";
 
@@ -20,36 +15,26 @@ const WebhookViewer = () => {
       url: WEBHOOK_URL,
       autoConnect: false,
       onMessage: (data) => {
-        toast(TOAST_MESSAGES.NEW_MESSAGE, {
-          description: getFormattedDate(new Date()),
-        });
+        ToastNotifications.showNewMessage();
         console.log(CONSOLE_MESSAGES.NEW_MESSAGE, data);
       },
       onOpen: () => {
-        toast(TOAST_MESSAGES.CONNECTED, {
-          description: TOAST_DESCRIPTIONS.CONNECTED,
-        });
+        ToastNotifications.showConnected();
         console.log(CONSOLE_MESSAGES.CONNECTED);
       },
       onClose: () => {
-        toast(TOAST_MESSAGES.DISCONNECTED, {
-          description: TOAST_DESCRIPTIONS.DISCONNECTED,
-        });
+        ToastNotifications.showDisconnected();
         console.log(CONSOLE_MESSAGES.DISCONNECTED);
       },
       onError: (error) => {
-        toast(TOAST_MESSAGES.ERROR, {
-          description: TOAST_DESCRIPTIONS.ERROR,
-        });
+        ToastNotifications.showError();
         console.error(CONSOLE_MESSAGES.WEBSOCKET_ERROR, error);
       },
     });
 
   const handleClearMessages = () => {
     clearMessages();
-    toast(TOAST_MESSAGES.MESSAGES_CLEARED, {
-      description: TOAST_DESCRIPTIONS.MESSAGES_CLEARED,
-    });
+    ToastNotifications.showMessagesCleared();
   };
 
   const getStatusVariant = () => {
@@ -78,6 +63,16 @@ const WebhookViewer = () => {
     }
   };
 
+  const handleDisconnect = () => {
+    disconnect();
+    ToastNotifications.showDisconnecting();
+  };
+
+  const handleConnect = () => {
+    connect();
+    ToastNotifications.showConnecting();
+  };
+
   return (
     <div className="p-3 mx-auto w-full">
       <div className="bg-white rounded-lg shadow-lg p-4">
@@ -92,8 +87,8 @@ const WebhookViewer = () => {
 
             <ConnectButton
               connectionStatus={connectionStatus}
-              disconnect={disconnect}
-              connect={connect}
+              disconnect={handleDisconnect}
+              connect={handleConnect}
             />
             <Button
               onClick={handleClearMessages}

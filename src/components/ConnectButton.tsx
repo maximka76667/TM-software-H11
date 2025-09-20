@@ -1,7 +1,5 @@
 import { Button } from "./ui/button";
 import type { ConnectionStatus } from "@/hooks/useWebSocket";
-import { toast } from "sonner";
-import { TOAST_DESCRIPTIONS, TOAST_MESSAGES } from "@/constants/messages";
 
 interface ConnectButtonProps {
   connectionStatus: ConnectionStatus;
@@ -14,22 +12,8 @@ const ConnectButton = ({
   disconnect,
   connect,
 }: ConnectButtonProps) => {
-  const handleDisconnect = () => {
-    toast(TOAST_MESSAGES.DISCONNECTING, {
-      description: TOAST_DESCRIPTIONS.DISCONNECTING,
-    });
-    disconnect();
-  };
-
-  const handleConnect = () => {
-    toast(TOAST_MESSAGES.CONNECTING, {
-      description: TOAST_DESCRIPTIONS.CONNECTING,
-    });
-    connect();
-  };
-
   if (connectionStatus === "connected") {
-    return <Button onClick={handleDisconnect}>Disconnect</Button>;
+    return <Button onClick={disconnect}>Disconnect</Button>;
   }
 
   if (connectionStatus === "connecting") {
@@ -37,7 +21,7 @@ const ConnectButton = ({
   }
 
   if (connectionStatus === "disconnected") {
-    return <Button onClick={handleConnect}>Connect</Button>;
+    return <Button onClick={connect}>Connect</Button>;
   }
 
   if (connectionStatus === "error") {
