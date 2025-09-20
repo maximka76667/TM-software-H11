@@ -110,6 +110,10 @@ export const useWebSocket = (
     if (autoConnect) {
       connect();
     }
+
+    return () => {
+      disconnect();
+    };
   }, [autoConnect, connect]);
 
   return {
