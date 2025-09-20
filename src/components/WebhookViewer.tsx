@@ -5,6 +5,12 @@ import ConnectButton from "./ConnectButton";
 import { toast } from "sonner";
 import { getFormattedDate } from "@/lib/utils";
 import MessageCard from "./MessageCard";
+import {
+  CONSOLE_MESSAGES,
+  TOAST_DESCRIPTIONS,
+  TOAST_MESSAGES,
+} from "@/constants/messages";
+import { STATUS_COLORS, STATUS_VARIANTS } from "@/constants/status";
 
 const WEBHOOK_URL = "ws://localhost:3000";
 
@@ -14,61 +20,61 @@ const WebhookViewer = () => {
       url: WEBHOOK_URL,
       autoConnect: false,
       onMessage: (data) => {
-        toast("New webhook message received", {
+        toast(TOAST_MESSAGES.NEW_MESSAGE, {
           description: getFormattedDate(new Date()),
         });
-        console.log("New webhook message received:", data);
+        console.log(CONSOLE_MESSAGES.NEW_MESSAGE, data);
       },
       onOpen: () => {
-        toast("Connected to webhook server", {
-          description: "You are now connected to the webhook server",
+        toast(TOAST_MESSAGES.CONNECTED, {
+          description: TOAST_DESCRIPTIONS.CONNECTED,
         });
-        console.log("Connected to webhook server");
+        console.log(CONSOLE_MESSAGES.CONNECTED);
       },
       onClose: () => {
-        toast("Disconnected from webhook server", {
-          description: "You are now disconnected from the webhook server",
+        toast(TOAST_MESSAGES.DISCONNECTED, {
+          description: TOAST_DESCRIPTIONS.DISCONNECTED,
         });
-        console.log("Disconnected from webhook server");
+        console.log(CONSOLE_MESSAGES.DISCONNECTED);
       },
       onError: (error) => {
-        toast("Error connecting to webhook server", {
-          description: "Please check your internet connection and try again",
+        toast(TOAST_MESSAGES.ERROR, {
+          description: TOAST_DESCRIPTIONS.ERROR,
         });
-        console.error("WebSocket error:", error);
+        console.error(CONSOLE_MESSAGES.WEBSOCKET_ERROR, error);
       },
     });
 
   const handleClearMessages = () => {
     clearMessages();
-    toast("Messages cleared", {
-      description: "All messages have been cleared",
+    toast(TOAST_MESSAGES.MESSAGES_CLEARED, {
+      description: TOAST_DESCRIPTIONS.MESSAGES_CLEARED,
     });
   };
 
   const getStatusVariant = () => {
     switch (connectionStatus) {
       case "connected":
-        return "success";
+        return STATUS_VARIANTS.CONNECTED;
       case "connecting":
-        return "warning";
+        return STATUS_VARIANTS.CONNECTING;
       case "error":
-        return "destructive";
+        return STATUS_VARIANTS.ERROR;
       default:
-        return "secondary";
+        return STATUS_VARIANTS.DISCONNECTED;
     }
   };
 
   const getStatusColor = () => {
     switch (connectionStatus) {
       case "connected":
-        return "bg-green-500";
+        return STATUS_COLORS.CONNECTED;
       case "connecting":
-        return "bg-yellow-500";
+        return STATUS_COLORS.CONNECTING;
       case "error":
-        return "bg-red-500";
+        return STATUS_COLORS.ERROR;
       default:
-        return "bg-gray-500";
+        return STATUS_COLORS.DISCONNECTED;
     }
   };
 
