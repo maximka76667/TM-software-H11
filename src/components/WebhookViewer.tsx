@@ -43,10 +43,11 @@ const WebhookViewer = () => {
               connectionStatus={connectionStatus}
               disconnect={disconnect}
               connect={connect}
+              className="select-none"
             />
             <Button
               onClick={handleClearMessages}
-              className="bg-gray-500 text-white rounded-md hover:bg-gray-600 text-sm"
+              className="bg-gray-500 text-white rounded-md hover:bg-gray-600 text-sm select-none"
             >
               Clear
             </Button>
