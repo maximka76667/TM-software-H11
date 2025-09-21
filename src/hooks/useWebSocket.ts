@@ -54,6 +54,8 @@ export const useWebSocket = (
 
   const connectAsync = useCallback(() => {
     return new Promise<void>((resolve, reject) => {
+      setConnectionStatus("connecting");
+
       if (wsRef.current?.readyState === WebSocket.OPEN) {
         resolve();
         return;
