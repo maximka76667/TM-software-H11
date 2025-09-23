@@ -21,7 +21,7 @@ const ConnectButton = ({
 }: ConnectButtonProps) => {
   if (connectionStatus === "connected") {
     return (
-      <Button onClick={disconnect} {...props}>
+      <Button onClick={disconnect} aria-label="Disconnect" {...props}>
         Disconnect
       </Button>
     );
@@ -29,7 +29,7 @@ const ConnectButton = ({
 
   if (connectionStatus === "connecting") {
     return (
-      <Button disabled {...props}>
+      <Button disabled aria-label="Connecting" {...props}>
         Connecting...
       </Button>
     );
@@ -37,7 +37,7 @@ const ConnectButton = ({
 
   if (connectionStatus === "disconnected") {
     return (
-      <Button onClick={connect} {...props}>
+      <Button onClick={connect} aria-label="Connect" {...props}>
         Connect
       </Button>
     );
@@ -45,7 +45,7 @@ const ConnectButton = ({
 
   if (connectionStatus === "error") {
     return (
-      <Button onClick={connect} {...props}>
+      <Button onClick={connect} aria-label="Retry" {...props}>
         Retry
       </Button>
     );

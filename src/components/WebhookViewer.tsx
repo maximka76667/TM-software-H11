@@ -48,6 +48,7 @@ const WebhookViewer = () => {
             <Button
               onClick={handleClearMessages}
               className="bg-gray-500 text-white rounded-md hover:bg-gray-600 text-sm select-none"
+              aria-label="Clear"
             >
               Clear
             </Button>
