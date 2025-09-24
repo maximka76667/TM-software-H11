@@ -43,12 +43,12 @@ const WebhookViewer = () => {
               connectionStatus={connectionStatus}
               disconnect={disconnect}
               connect={connect}
-              className="select-none"
+              className="select-none cursor-pointer"
             />
             <Button
               onClick={handleClearMessages}
               variant={"secondary"}
-              className="rounded-md text-sm select-none"
+              className="rounded-md text-sm select-none cursor-pointer"
               aria-label="Clear"
             >
               Clear
