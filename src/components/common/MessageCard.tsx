@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader } from "./ui/card";
-import { Badge } from "./ui/badge";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { Badge } from "../ui/badge";
 
 import type MetricMessage from "@/types/MetricMessage";
 

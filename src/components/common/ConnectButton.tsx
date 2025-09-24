@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 import type { ConnectionStatus } from "@/types/ConnectionsStatus";
 

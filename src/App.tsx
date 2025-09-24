@@ -1,6 +1,6 @@
 import "./App.css";
 import { Toaster } from "./components/ui/sonner";
-import WebhookViewer from "./components/WebhookViewer";
+import WebhookViewer from "./components/common/WebhookViewer";
 
 const toastConfig = {
   position: "bottom-center" as const,
