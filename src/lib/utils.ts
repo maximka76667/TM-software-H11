@@ -58,3 +58,16 @@ export const formatLastUpdatedLive = (
     return date.toLocaleDateString();
   }
 };
+
+// Utility function to format metric values with units
+export const formatMetricValue = (key: string, value: number): string => {
+  const unitMap: Record<string, string> = {
+    battery_level: "%",
+    temperature: " \u00B0C",
+    humidity: "%",
+    signal_strength: " dBm",
+  };
+
+  const unit = unitMap[key] || "";
+  return `${value.toFixed(2)}${unit}`;
+};
