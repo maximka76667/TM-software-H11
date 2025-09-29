@@ -58,14 +58,6 @@ const WebhookViewer = () => {
               connect={connect}
               className="select-none cursor-pointer bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
             />
-            <Button
-              onClick={handleClearMessages}
-              variant={"secondary"}
-              className="rounded-md text-sm select-none cursor-pointer hover:bg-primary/20 text-black"
-              aria-label="Clear"
-            >
-              Clear
-            </Button>
           </div>
         </div>
 
