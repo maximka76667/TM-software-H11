@@ -4,7 +4,7 @@ import {
   formatMetricValue,
   formatSnakeCaseToTitle,
 } from "@/lib/utils";
-import React, { memo, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -35,14 +35,14 @@ const MetricBox = ({
 
   const [previousValue, setPreviousValue] = useState<number | null>(null);
 
-  const runFlashAnimation = () => {
+  const runFlashAnimation = useCallback(() => {
     cardRef.current?.animate(valueChangedAnimation, {
       duration: 1000,
       easing: "ease-out",
     });
-  };
+  }, []);
 
-  const runValueChangeAnimation = () => {
+  const runValueChangeAnimation = useCallback(() => {
     if (previousValue === null) {
       return;
     }
@@ -58,7 +58,8 @@ const MetricBox = ({
         easing: "ease-out",
       });
     }
-  };
+  }, [metricData.value, previousValue]);
+
   useEffect(() => {
     // Execute flash animation
     runFlashAnimation();
@@ -72,7 +73,7 @@ const MetricBox = ({
     return () => {
       setPreviousValue(null);
     };
-  }, [metricData.value]);
+  }, [metricData.value, runFlashAnimation, runValueChangeAnimation]);
 
   return (
     <Card

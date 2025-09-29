@@ -1,5 +1,4 @@
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 
 import ConnectButton from "./ConnectButton";
 
@@ -13,13 +12,8 @@ import MetricBox from "./MetricBox";
 import { useEffect, useState } from "react";
 
 const WebhookViewer = () => {
-  const {
-    connectionStatus,
-    lastMetrics,
-    disconnect,
-    connect,
-    handleClearMessages,
-  } = useWebhookConnection();
+  const { connectionStatus, lastMetrics, disconnect, connect } =
+    useWebhookConnection();
 
   const [currentTime, setCurrentTime] = useState(new Date());
 
