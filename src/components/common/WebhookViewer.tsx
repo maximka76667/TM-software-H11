@@ -4,14 +4,16 @@ import ConnectButton from "./ConnectButton";
 
 import { getStatusVariant, getStatusColor } from "@/lib/statusUtils";
 
-import { WEBHOOK_URL } from "@/constants/ws";
+import { WEBHOOK_URL } from "@/constants/urls";
 
 import { useWebhookConnection } from "@/hooks/useWebSocketConnection";
 
 import MetricBox from "./MetricBox";
 import { useEffect, useState } from "react";
 
-const WebhookViewer = () => {
+interface WebhookViewerProps {}
+
+const WebhookViewer = ({}: WebhookViewerProps) => {
   const { connectionStatus, lastMetrics, disconnect, connect } =
     useWebhookConnection();
 

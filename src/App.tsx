@@ -1,6 +1,8 @@
 import "./App.css";
 import { Toaster } from "./components/ui/sonner";
 import WebhookViewer from "./components/common/WebhookViewer";
+import { Link, Route, Routes } from "react-router-dom";
+import WebhookSender from "./components/common/WebhookSender";
 
 const toastConfig = {
   position: "bottom-center" as const,
@@ -16,7 +18,16 @@ function App() {
         <h1 className="text-3xl font-bold text-black my-2">
           Training Month - Hyperloop H11
         </h1>
-        <WebhookViewer />
+
+        <nav className="flex gap-4">
+          <Link to="/viewer">Webhook Viewer</Link>
+          <Link to="/sender">Webhook Sender</Link>
+        </nav>
+
+        <Routes>
+          <Route path="/viewer" element={<WebhookViewer />} />
+          <Route path="/sender" element={<WebhookSender />} />
+        </Routes>
       </div>
 
       <Toaster
