@@ -7,7 +7,7 @@ export const TOAST_MESSAGES = {
   DISCONNECTING: "Disconnecting from webhook server",
   ERROR_CONNECTING: "Error connecting to webhook server",
   MESSAGES_CLEARED: "Messages cleared",
-  SUCCESS: "Success",
+  SUCCESS: "Successful",
   ERROR: "Error",
   SENDING_COMMAND: "Sending command",
 } as const;

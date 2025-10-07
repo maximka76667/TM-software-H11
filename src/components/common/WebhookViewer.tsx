@@ -11,9 +11,7 @@ import { useWebhookConnection } from "@/hooks/useWebSocketConnection";
 import MetricBox from "./MetricBox";
 import { useEffect, useState } from "react";
 
-interface WebhookViewerProps {}
-
-const WebhookViewer = ({}: WebhookViewerProps) => {
+const WebhookViewer = () => {
   const { connectionStatus, lastMetrics, disconnect, connect } =
     useWebhookConnection();
 
