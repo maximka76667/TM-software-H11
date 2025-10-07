@@ -1,10 +1,10 @@
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   cn,
   formatLastUpdatedLive,
   formatMetricValue,
   formatSnakeCaseToTitle,
 } from "@/lib/utils";
-import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -79,34 +79,31 @@ const MetricBox = ({
     <Card
       ref={cardRef}
       className={cn(
-        "bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 p-4 rounded-lg flex-1 min-w-[200px]"
-        // flashAnimationName
+        "bg-gradient-to-br from-primary/5 ",
+        "hover:shadow-lg transition-all duration-300",
+        "h-full flex flex-col"
       )}
     >
-      <CardHeader>
-        <CardTitle className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm text-muted-foreground uppercase tracking-wide">
           {formatSnakeCaseToTitle(metricLabel)}
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="flex items-baseline gap-1 justify-center">
-          <span
-            className={cn(
-              "text-4xl font-bold",
-              "transition-colors",
-              "duration-300"
-            )}
-            ref={valueRef}
-          >
-            {formatMetricValue(metricLabel, metricData.value)}
-          </span>
-        </div>
-      </CardContent>
-      <CardFooter className="flex justify-end items-center p-0 pt-2">
-        <Badge
-          variant="secondary"
-          className="text-xs bg-primary/10 text-primary border-primary/20 transition-colors"
+
+      <CardContent className="flex-1 flex items-center justify-center pb-3">
+        <span
+          className={cn(
+            "text-4xl font-bold text-foreground",
+            "transition-colors duration-300"
+          )}
+          ref={valueRef}
         >
+          {formatMetricValue(metricLabel, metricData.value)}
+        </span>
+      </CardContent>
+
+      <CardFooter className="pt-0 justify-end">
+        <Badge variant="secondary" className="text-xs">
           {formatLastUpdatedLive(metricData.lastUpdated, currentTime)}
         </Badge>
       </CardFooter>

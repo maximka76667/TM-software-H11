@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
 import { sendCommand } from "@/lib/api";
@@ -6,49 +6,46 @@ import { ToastNotifications } from "@/lib/notifications";
 import { API_URL } from "@/constants/urls";
 import type { Action } from "@/types/Action";
 import { ACTIONS } from "@/constants/actions";
+import { Spinner } from "../ui/spinner";
 
 const WebhookSender = () => {
   const [pendingActions, setPendingActions] = useState<Set<Action>>(new Set());
 
-  // helper utilities for handling pending actions set
-  // adds action to to the pending set
-  const addPending = (a: Action) =>
+  // Memoized helper to add action to pending set
+  const addPending = useCallback((action: Action) => {
+    setPendingActions((prev) => new Set(prev).add(action));
+  }, []);
+
+  // Memoized helper to remove action from pending set
+  const removePending = useCallback((action: Action) => {
     setPendingActions((prev) => {
       const next = new Set(prev);
-      next.add(a);
+      next.delete(action);
       return next;
     });
+  }, []);
 
-  // removes action from the pending set
-  const removePending = (a: Action) =>
-    setPendingActions((prev) => {
-      const next = new Set(prev);
-      next.delete(a);
-      return next;
-    });
+  const handleSendCommand = useCallback(
+    async (action: Action) => {
+      // Skip if already pending
+      if (pendingActions.has(action)) return;
 
-  async function handleSendCommand(action: Action) {
-    // Skip if already pending
-    if (pendingActions.has(action)) return;
+      addPending(action);
 
-    addPending(action);
+      try {
+        const req = sendCommand(action);
+        ToastNotifications.showCommandResult(req, action);
 
-    try {
-      const req = sendCommand(action);
-      ToastNotifications.showCommandResult(req, action);
-
-      const res = await req;
-      console.log("Command sent successfully", res);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      } else {
-        console.error(error);
+        const res = await req;
+        console.log("Command sent successfully", res);
+      } catch (error: unknown) {
+        console.error(error instanceof Error ? error.message : error);
+      } finally {
+        removePending(action);
       }
-    } finally {
-      removePending(action);
-    }
-  }
+    },
+    [pendingActions, addPending, removePending]
+  );
 
   return (
     <Card className="max-w-xl w-full m-4">
@@ -74,9 +71,11 @@ const WebhookSender = () => {
                 variant={variant}
                 onClick={() => handleSendCommand(action)}
                 disabled={isLoading}
-                aria-label={`Send ${action}`}
-                className={`w-full ${classname ?? ""}`}
+                aria-label={`Send ${action} command`}
+                aria-busy={isLoading}
+                className={`w-full transition-all ${classname ?? ""}`}
               >
+                {isLoading && <Spinner />}
                 {isLoading ? "Sending..." : label}
               </Button>
             );

@@ -1,15 +1,17 @@
-import { Badge } from "../ui/badge";
-
-import ConnectButton from "./ConnectButton";
-
-import { getStatusVariant, getStatusColor } from "@/lib/statusUtils";
-
-import { WEBHOOK_URL } from "@/constants/urls";
-
-import { useWebhookConnection } from "@/hooks/useWebSocketConnection";
-
-import MetricBox from "./MetricBox";
 import { useEffect, useState } from "react";
+import { Badge } from "../ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import ConnectButton from "./ConnectButton";
+import MetricBox from "./MetricBox";
+import { getStatusVariant, getStatusColor } from "@/lib/statusUtils";
+import { WEBHOOK_URL } from "@/constants/urls";
+import { useWebhookConnection } from "@/hooks/useWebSocketConnection";
 
 const WebhookViewer = () => {
   const { connectionStatus, lastMetrics, disconnect, connect } =
@@ -27,12 +29,19 @@ const WebhookViewer = () => {
   }, []);
 
   return (
-    <div className="p-3 mx-auto w-full">
-      <div className="bg-white rounded-lg shadow-lg p-4">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-3 w-full justify-end">
+    <Card className="max-w-7xl w-full m-4">
+      <CardHeader>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <CardTitle>Webhook Metrics</CardTitle>
+            <CardDescription className="mt-1.5">
+              Real-time monitoring of incoming webhook data
+            </CardDescription>
+          </div>
+
+          <div className="flex items-center gap-3">
             <Badge
-              className={`flex items-center gap-2 bg-primary/10 text-primary border-primary/20 ${getStatusVariant(
+              className={`flex items-center gap-2 ${getStatusVariant(
                 connectionStatus
               )}`}
             >
@@ -40,32 +49,32 @@ const WebhookViewer = () => {
                 className={`w-2 h-2 rounded-full ${getStatusColor(
                   connectionStatus
                 )}`}
-              ></div>
+              />
               <span className="text-sm font-medium capitalize">
                 {connectionStatus}
               </span>
             </Badge>
 
             <ConnectButton
+              className="bg-gradient-to-br from-primary/5 to-primary/10 text-primary hover:bg-primary/10"
               connectionStatus={connectionStatus}
               disconnect={disconnect}
               connect={connect}
-              className="select-none cursor-pointer bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
             />
           </div>
         </div>
 
-        <div className="mb-4 text-right">
-          <p className="text-sm text-gray-600">
-            Connected to:{" "}
-            <code className="bg-gray-100 px-2 py-1 rounded shadow-md">
-              {WEBHOOK_URL}
-            </code>
-          </p>
+        <div className="text-sm text-muted-foreground pt-2">
+          Endpoint:{" "}
+          <code className="px-1.5 py-0.5 rounded bg-muted font-mono text-xs">
+            {WEBHOOK_URL}
+          </code>
         </div>
+      </CardHeader>
 
-        {/* Metrics boxes */}
-        <div className="flex flex-wrap gap-4">
+      <CardContent>
+        {/* Metrics boxes - grid ensures same size */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {Object.entries(lastMetrics).map(([key, metricData]) => (
             <MetricBox
               key={key}
@@ -75,8 +84,17 @@ const WebhookViewer = () => {
             />
           ))}
         </div>
-      </div>
-    </div>
+
+        {Object.keys(lastMetrics).length === 0 && (
+          <div className="text-center py-12 text-muted-foreground">
+            <p className="text-sm">No metrics received yet</p>
+            <p className="text-xs mt-1">
+              Connect to start receiving webhook data
+            </p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
