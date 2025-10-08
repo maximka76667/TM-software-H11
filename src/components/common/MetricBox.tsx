@@ -18,8 +18,9 @@ import {
   valueDecreaseAnimation,
   valueIncreaseAnimation,
 } from "@/constants/animations";
+import React from "react";
 
-interface MetricBoxProps {
+interface MetricBoxProps extends React.ComponentProps<"div"> {
   metricLabel: string;
   metricData: { value: number; lastUpdated: Date };
   currentTime: Date;
@@ -29,6 +30,7 @@ const MetricBox = ({
   metricLabel,
   metricData,
   currentTime,
+  ...props
 }: MetricBoxProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const valueRef = useRef<HTMLSpanElement>(null);
@@ -81,8 +83,10 @@ const MetricBox = ({
       className={cn(
         "bg-gradient-to-br from-primary/5 ",
         "hover:shadow-lg transition-all duration-300",
-        "h-full flex flex-col"
+        "h-full flex flex-col",
+        props.className
       )}
+      {...props}
     >
       <CardHeader className="pb-3">
         <CardTitle className="text-sm text-muted-foreground uppercase tracking-wide">
