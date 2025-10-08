@@ -46,6 +46,7 @@ const WebhookViewer = () => {
               )}`}
             >
               <div
+                aria-hidden="true"
                 className={`w-2 h-2 rounded-full ${getStatusColor(
                   connectionStatus
                 )}`}

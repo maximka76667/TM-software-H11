@@ -44,7 +44,7 @@ const ConnectButton = ({
         className={`${baseClasses} bg-amber-100 text-amber-700 border-amber-200 cursor-not-allowed`}
         {...props}
       >
-        <Spinner /> Connecting...
+        <Spinner aria-hidden="true" /> Connecting...
       </Button>
     );
   }

@@ -75,7 +75,7 @@ const WebhookSender = () => {
                 aria-busy={isLoading}
                 className={`w-full transition-all ${classname ?? ""}`}
               >
-                {isLoading && <Spinner />}
+                {isLoading && <Spinner aria-hidden="true" />}
                 {isLoading ? "Sending..." : label}
               </Button>
             );

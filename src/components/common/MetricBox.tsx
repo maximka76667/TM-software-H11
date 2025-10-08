@@ -87,9 +87,13 @@ const MetricBox = ({
         props.className
       )}
       {...props}
+      aria-labelledby={`metric-title-${metricLabel}`}
     >
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm text-muted-foreground uppercase tracking-wide">
+        <CardTitle
+          id={`metric-title-${metricLabel}`}
+          className="text-sm text-muted-foreground uppercase tracking-wide"
+        >
           {formatSnakeCaseToTitle(metricLabel)}
         </CardTitle>
       </CardHeader>
