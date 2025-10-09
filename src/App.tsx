@@ -1,8 +1,8 @@
 import "./App.css";
 import { Toaster } from "./components/ui/sonner";
-import WebhookViewer from "./components/common/WebhookViewer";
+import WebhookViewer from "./pages/WebhookViewer";
 import { Link, Route, Routes } from "react-router-dom";
-import WebhookSender from "./components/common/WebhookSender";
+import WebhookSender from "./pages/WebhookSender";
 
 const toastConfig = {
   position: "bottom-center" as const,
@@ -26,10 +26,12 @@ function App() {
           </nav>
         </header>
 
-        <Routes>
-          <Route path="/viewer" element={<WebhookViewer />} />
-          <Route path="/sender" element={<WebhookSender />} />
-        </Routes>
+        <main>
+          <Routes>
+            <Route path="/viewer" element={<WebhookViewer />} />
+            <Route path="/sender" element={<WebhookSender />} />
+          </Routes>
+        </main>
       </div>
 
       <Toaster

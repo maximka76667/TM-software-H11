@@ -80,6 +80,8 @@ const MetricBox = ({
   return (
     <Card
       ref={cardRef}
+      aria-labelledby={`metric-title-${metricLabel}`}
+      role="region"
       className={cn(
         "bg-gradient-to-br from-primary/5 ",
         "hover:shadow-lg transition-all duration-300",
@@ -87,7 +89,6 @@ const MetricBox = ({
         props.className
       )}
       {...props}
-      aria-labelledby={`metric-title-${metricLabel}`}
     >
       <CardHeader className="pb-3">
         <CardTitle

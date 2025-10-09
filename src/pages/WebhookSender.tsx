@@ -1,14 +1,23 @@
 import { useState, useCallback } from "react";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { sendCommand } from "@/lib/api";
 import { ToastNotifications } from "@/lib/notifications";
 import { API_URL } from "@/constants/urls";
 import type { Action } from "@/types/Action";
 import { ACTIONS } from "@/constants/actions";
-import { Spinner } from "../ui/spinner";
+import { Spinner } from "../components/ui/spinner";
+import useDocumentTitle from "@/hooks/useDocumentTitle";
 
 const WebhookSender = () => {
+  useDocumentTitle("Webhook Sender - Hyperloop H11");
+
   const [pendingActions, setPendingActions] = useState<Set<Action>>(new Set());
 
   // Memoized helper to add action to pending set
@@ -48,12 +57,19 @@ const WebhookSender = () => {
   );
 
   return (
-    <Card className="max-w-xl w-full m-4">
+    <Card
+      role="region"
+      aria-label="Command sender section"
+      className="max-w-xl w-full m-4"
+    >
       <CardHeader>
+        <CardTitle className="text-sm uppercase tracking-wide mb-2">
+          Command Sender
+        </CardTitle>
         <CardDescription>
           Send predefined actions to your backend.
         </CardDescription>
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground mt-1">
           Endpoint:{" "}
           <code className="px-1.5 py-0.5 rounded bg-muted">
             {API_URL}/api/command
