@@ -53,7 +53,10 @@ function showTextSuccess(text: string) {
   });
 }
 
-function showCommandResult(promise: Promise<CommandResponse>, command: string) {
+function showCommandPromiseResult(
+  promise: Promise<CommandResponse>,
+  command: string
+) {
   toast.promise(promise, {
     loading: TOAST_MESSAGES.SENDING_COMMAND,
     success: (data) => {
@@ -62,6 +65,12 @@ function showCommandResult(promise: Promise<CommandResponse>, command: string) {
     error: (error) => {
       return `${TOAST_MESSAGES.ERROR} ${command}: ${error.message}`;
     },
+  });
+}
+
+function showCommandResult(command: string) {
+  toast.success(TOAST_MESSAGES.SUCCESS, {
+    description: `${TOAST_MESSAGES.SUCCESS} ${command}`,
   });
 }
 
