@@ -4,7 +4,7 @@ import { ToastNotifications } from "@/lib/notifications";
 import { CONSOLE_MESSAGES } from "@/constants/messages";
 import { WEBHOOK_URL } from "@/constants/urls";
 import type MetricMessage from "@/types/MetricMessage";
-import type { Command } from "@/lib/api";
+import type Command from "@/types/Command";
 
 export const useWebhookConnection = () => {
   // Function executed when a new message is received

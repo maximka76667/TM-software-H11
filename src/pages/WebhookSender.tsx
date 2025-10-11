@@ -24,12 +24,8 @@ const WebhookSender = ({ sendCommand }: WebhookSenderProps) => {
     async (command: Command) => {
       try {
         sendCommand(command);
-        ToastNotifications.showCommandResult(
-          `${command.action}${
-            command.params ? ` ${JSON.stringify(command.params)}` : ""
-          }`
-        );
-        console.log("Command sent successfully", command.action);
+        ToastNotifications.showCommandResult(command);
+        console.log("Command sent successfully", command);
       } catch (error: unknown) {
         ToastNotifications.showTextError(
           error instanceof Error ? error.message : (error as any).toString()
