@@ -1,5 +1,4 @@
-import { useState, useCallback } from "react";
-import { Button } from "../components/ui/button";
+import { useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -7,60 +6,45 @@ import {
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
-import { sendCommand } from "@/lib/api";
 import { ToastNotifications } from "@/lib/notifications";
 import { API_URL } from "@/constants/urls";
-import type { Action } from "@/types/Action";
-import { ACTIONS } from "@/constants/actions";
-import { Spinner } from "../components/ui/spinner";
+import { COMMANDS } from "@/constants/commands";
 import useDocumentTitle from "@/hooks/useDocumentTitle";
+import type Command from "@/types/Command";
+import CommandButton from "@/components/common/CommandButton";
 
-const WebhookSender = () => {
+interface WebhookSenderProps {
+  sendCommand: (command: Command) => void;
+}
+
+const WebhookSender = ({ sendCommand }: WebhookSenderProps) => {
   useDocumentTitle("Webhook Sender - Hyperloop H11");
 
-  const [pendingActions, setPendingActions] = useState<Set<Action>>(new Set());
-
-  // Memoized helper to add action to pending set
-  const addPending = useCallback((action: Action) => {
-    setPendingActions((prev) => new Set(prev).add(action));
-  }, []);
-
-  // Memoized helper to remove action from pending set
-  const removePending = useCallback((action: Action) => {
-    setPendingActions((prev) => {
-      const next = new Set(prev);
-      next.delete(action);
-      return next;
-    });
-  }, []);
-
   const handleSendCommand = useCallback(
-    async (action: Action) => {
-      // Skip if already pending
-      if (pendingActions.has(action)) return;
-
-      addPending(action);
-
+    async (command: Command) => {
       try {
-        const req = sendCommand(action);
-        ToastNotifications.showCommandResult(req, action);
-
-        const res = await req;
-        console.log("Command sent successfully", res);
+        sendCommand(command);
+        ToastNotifications.showCommandResult(
+          `${command.action}${
+            command.params ? ` ${JSON.stringify(command.params)}` : ""
+          }`
+        );
+        console.log("Command sent successfully", command.action);
       } catch (error: unknown) {
+        ToastNotifications.showTextError(
+          error instanceof Error ? error.message : (error as any).toString()
+        );
         console.error(error instanceof Error ? error.message : error);
-      } finally {
-        removePending(action);
       }
     },
-    [pendingActions, addPending, removePending]
+    [sendCommand]
   );
 
   return (
     <Card
       role="region"
       aria-label="Command sender section"
-      className="max-w-xl w-full m-4"
+      className="w-full m-4"
     >
       <CardHeader>
         <CardTitle className="text-sm uppercase tracking-wide mb-2">
@@ -79,23 +63,20 @@ const WebhookSender = () => {
 
       <CardContent>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-          {ACTIONS.map(({ label, action, variant, classname }) => {
-            const isLoading = pendingActions.has(action);
-            return (
-              <Button
-                key={action}
+          {COMMANDS.map(
+            ({ action, label, params, fixedParams, variant, classname }) => (
+              <CommandButton
+                key={`${action}-${label}`}
+                label={label}
+                action={action}
+                params={params}
+                fixedParams={fixedParams}
                 variant={variant}
-                onClick={() => handleSendCommand(action)}
-                disabled={isLoading}
-                aria-label={`Send ${action} command`}
-                aria-busy={isLoading}
-                className={`w-full transition-all ${classname ?? ""}`}
-              >
-                {isLoading && <Spinner aria-hidden="true" />}
-                {isLoading ? "Sending..." : label}
-              </Button>
-            );
-          })}
+                classname={classname}
+                onSendCommand={handleSendCommand}
+              />
+            )
+          )}
         </div>
       </CardContent>
     </Card>
