@@ -27,7 +27,7 @@ const WebhookViewer = ({ lastMetrics, currentTime }: WebhookViewerProps) => {
     <Card
       role="region"
       aria-labelledby="webhook-viewer-title"
-      className="w-full m-4"
+      className="w-full m-4 flex-2"
     >
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center mb-4">
@@ -39,7 +39,7 @@ const WebhookViewer = ({ lastMetrics, currentTime }: WebhookViewerProps) => {
           </div>
         </div>
 
-        <div className="text-sm text-muted-foreground pt-2">
+        <div className="text-sm text-muted-foreground">
           Endpoint:{" "}
           <code className="px-1.5 py-0.5 rounded bg-muted font-mono text-xs">
             {WEBHOOK_URL}
@@ -48,7 +48,7 @@ const WebhookViewer = ({ lastMetrics, currentTime }: WebhookViewerProps) => {
       </CardHeader>
 
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
           {Object.entries(lastMetrics).map(([key, metricData]) => (
             <MetricBox
               key={key}
