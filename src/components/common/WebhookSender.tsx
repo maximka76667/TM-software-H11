@@ -5,15 +5,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
+} from "../ui/card";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ToastNotifications } from "@/lib/notifications";
-import { API_URL } from "@/constants/urls";
-import { COMMAND_GROUPS, COMMANDS } from "@/constants/commands";
+import { COMMAND_GROUPS } from "@/constants/commands";
 import useDocumentTitle from "@/hooks/useDocumentTitle";
 import type Command from "@/types/Command";
 import CommandButton from "@/components/common/CommandButton";
@@ -51,6 +50,7 @@ const WebhookSender = ({
         console.log("Command sent successfully", command);
       } catch (error: unknown) {
         ToastNotifications.showTextError(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           error instanceof Error ? error.message : (error as any).toString()
         );
         console.error(error instanceof Error ? error.message : error);

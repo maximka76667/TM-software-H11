@@ -1,12 +1,8 @@
 import "./App.css";
 import { Toaster } from "./components/ui/sonner";
-import WebhookViewer from "./pages/WebhookViewer";
-import { Link, Route, Routes } from "react-router-dom";
-import WebhookSender from "./pages/WebhookSender";
+import WebhookViewer from "./components/common/WebhookViewer";
+import WebhookSender from "./components/common/WebhookSender";
 import { useWebhookConnection } from "./hooks/useWebSocketConnection";
-import ConnectButton from "./components/common/ConnectButton";
-import { Badge } from "./components/ui/badge";
-import { getStatusColor, getStatusVariant } from "./lib/statusUtils";
 import { useEffect, useState } from "react";
 
 const toastConfig = {

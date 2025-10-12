@@ -4,7 +4,6 @@ import {
   formatLastUpdatedLive,
   formatMetricValue,
   formatPascalCaseToTitle,
-  formatSnakeCaseToTitle,
 } from "@/lib/utils";
 import {
   Card,

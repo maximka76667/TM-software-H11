@@ -1,19 +1,14 @@
-import { useEffect, useState } from "react";
-import { Badge } from "../components/ui/badge";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import ConnectButton from "../components/common/ConnectButton";
-import MetricBox from "../components/common/MetricBox";
-import { getStatusVariant, getStatusColor } from "@/lib/statusUtils";
+} from "../ui/card";
+import MetricBox from "./MetricBox";
 import { WEBHOOK_URL } from "@/constants/urls";
 import useDocumentTitle from "@/hooks/useDocumentTitle";
 import type { LastMetrics } from "@/types/LastMetrics";
-import type { ConnectionStatus } from "@/types/ConnectionsStatus";
 
 interface WebhookViewerProps {
   lastMetrics: LastMetrics;
