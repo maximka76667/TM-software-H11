@@ -34,64 +34,20 @@ function App() {
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <header className="flex items-center justify-between gap-10 w-full p-5 px-10">
-          <div className="flex flex-col items-center">
-            <h1 className="text-3xl font-bold text-black my-2">
-              Training Month - Hyperloop H11
-            </h1>
-
-            <nav className="flex gap-4">
-              <Link to="/viewer">Webhook Viewer</Link>
-              <Link to="/sender">Webhook Sender</Link>
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Badge
-              aria-labelledby={"connection-status"}
-              className={`flex items-center gap-2 ${getStatusVariant(
-                connectionStatus
-              )}`}
-            >
-              <div
-                aria-hidden="true"
-                className={`w-2 h-2 rounded-full ${getStatusColor(
-                  connectionStatus
-                )}`}
-              />
-              <span
-                id="connection-status"
-                className="text-sm font-medium capitalize"
-              >
-                {connectionStatus}
-              </span>
-            </Badge>
-
-            <ConnectButton
-              className="bg-gradient-to-br from-primary/5 to-primary/10 text-primary hover:bg-primary/10"
-              connectionStatus={connectionStatus}
-              disconnect={disconnect}
-              connect={connect}
-            />
-          </div>
+        <header className="flex items-center justify-center gap-10 w-full p-5 px-10">
+          <h1 className="text-3xl font-bold text-black my-2 text-center">
+            Training Month - Hyperloop H11
+          </h1>
         </header>
 
-        <main className="w-full flex justify-center items-center flex-1">
-          <Routes>
-            <Route
-              path="/viewer"
-              element={
-                <WebhookViewer
-                  lastMetrics={lastMetrics}
-                  currentTime={currentTime}
-                />
-              }
-            />
-            <Route
-              path="/sender"
-              element={<WebhookSender sendCommand={sendCommand} />}
-            />
-          </Routes>
+        <main className="w-full flex justify-center flex-1 items-start">
+          <WebhookViewer lastMetrics={lastMetrics} currentTime={currentTime} />
+          <WebhookSender
+            connectionStatus={connectionStatus}
+            disconnect={disconnect}
+            connect={connect}
+            sendCommand={sendCommand}
+          />
         </main>
       </div>
 
