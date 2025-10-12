@@ -1,6 +1,11 @@
 import { useState, useCallback, memo } from "react";
 import { Button } from "../ui/button";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { ChevronDown, Settings2 } from "lucide-react";
 import type { Action } from "@/types/Action";
 import type { CommandParam } from "@/constants/commands";
 import type Command from "@/types/Command";
@@ -47,10 +52,6 @@ const CommandButton = memo(
     });
 
     const hasParams = params && params.length > 0;
-
-    const toggleExpanded = useCallback(() => {
-      setIsExpanded((prev) => !prev);
-    }, []);
 
     const handleParamChange = useCallback(
       (paramName: string, value: string | number) => {
@@ -117,69 +118,91 @@ const CommandButton = memo(
       );
     }
 
-    // Expandable command with params
+    // Expandable command with params using Collapsible
     return (
-      <div className="flex flex-col gap-2">
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={toggleExpanded}
-            aria-label={`${
-              isExpanded ? "Collapse" : "Expand"
-            } ${label} parameters`}
-            className="w-10 h-10 shrink-0"
-          >
-            {isExpanded ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4" />
-            )}
-          </Button>
-          <Button
-            variant={variant}
-            onClick={handleClick}
-            aria-label={`Send ${action} command`}
-            className={`flex-1 transition-all ${classname ?? ""}`}
-          >
-            {label}
-          </Button>
-        </div>
+      <Collapsible
+        open={isExpanded}
+        onOpenChange={setIsExpanded}
+        className="w-full"
+      >
+        <div>
+          {/* Main button row with integrated expand trigger */}
+          <div className="flex gap-2">
+            <Button
+              variant={variant}
+              onClick={handleClick}
+              aria-label={`Send ${action} command`}
+              className={`flex-1 transition-all ${classname ?? ""}`}
+            >
+              {label}
+            </Button>
 
-        {isExpanded && (
-          <div className="ml-12 space-y-2 animate-in slide-in-from-top-2">
-            {params.map((param) => (
-              <div key={param.name} className="flex flex-col gap-1">
-                <label
-                  htmlFor={`${action}-${label}-${param.name}`}
-                  className="text-xs text-muted-foreground"
-                >
-                  {param.label}
-                </label>
-                <input
-                  id={`${action}-${label}-${param.name}`}
-                  type={param.type}
-                  value={paramValues[param.name] ?? param.defaultValue ?? ""}
-                  onChange={(e) =>
-                    handleParamChange(
-                      param.name,
-                      param.type === "number"
-                        ? Number(e.target.value)
-                        : e.target.value
-                    )
-                  }
-                  className="px-3 py-2 text-sm border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring"
-                  placeholder={`Enter ${param.label.toLowerCase()}`}
+            <CollapsibleTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                aria-label={`${
+                  isExpanded ? "Hide" : "Show"
+                } ${label} parameters`}
+                className={`shrink-0 transition-all ${
+                  isExpanded
+                    ? "bg-accent/50 border-accent"
+                    : "hover:bg-accent/30"
+                }`}
+              >
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform duration-200 ${
+                    isExpanded ? "rotate-180" : ""
+                  }`}
                 />
-              </div>
-            ))}
+              </Button>
+            </CollapsibleTrigger>
           </div>
-        )}
-      </div>
+
+          {/* Parameters section */}
+          <CollapsibleContent>
+            <div className="rounded-lg border border-border/50 bg-accent/20 backdrop-blur-sm p-3 space-y-3">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium border-b border-border/30 pb-2">
+                <Settings2 className="h-3.5 w-3.5" />
+                <span>Parameters</span>
+              </div>
+
+              {params.map((param) => (
+                <div key={param.name} className="space-y-1.5">
+                  <label
+                    htmlFor={`${action}-${label}-${param.name}`}
+                    className="text-xs font-semibold text-foreground/90 flex items-center gap-1"
+                  >
+                    {param.label}
+                    {param.defaultValue !== undefined && (
+                      <span className="text-[10px] font-normal text-muted-foreground">
+                        (default: {param.defaultValue})
+                      </span>
+                    )}
+                  </label>
+                  <input
+                    id={`${action}-${label}-${param.name}`}
+                    type={param.type}
+                    value={paramValues[param.name] ?? param.defaultValue ?? ""}
+                    onChange={(e) =>
+                      handleParamChange(
+                        param.name,
+                        param.type === "number"
+                          ? Number(e.target.value)
+                          : e.target.value
+                      )
+                    }
+                    className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all shadow-sm hover:shadow-md"
+                    placeholder={`Enter ${param.label.toLowerCase()}`}
+                  />
+                </div>
+              ))}
+            </div>
+          </CollapsibleContent>
+        </div>
+      </Collapsible>
     );
   }
 );
-
-CommandButton.displayName = "CommandButton";
 
 export default CommandButton;
