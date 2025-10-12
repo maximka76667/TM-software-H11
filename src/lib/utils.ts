@@ -1,3 +1,4 @@
+import unitMap from "@/constants/unitMap";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -95,22 +96,6 @@ export const formatMetricValue = (
     }
     return value.toString();
   }
-
-  const unitMap: Record<string, string> = {
-    battery_level: "%",
-    temperature: " \u00B0C",
-    humidity: "%",
-    signal_strength: " dBm",
-    AverageTemp: " \u00B0C",
-    MinTemp: " \u00B0C",
-    MaxTemp: " \u00B0C",
-    AveragePressure: " hPa",
-    MinPressure: " hPa",
-    MaxPressure: " hPa",
-    AverageSpeed: " km/h",
-    MinSpeed: " km/h",
-    MaxSpeed: " km/h",
-  };
 
   const unit = unitMap[key] || "";
   return `${value.toFixed(2)}${unit}`;
