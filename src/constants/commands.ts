@@ -51,18 +51,43 @@ export const COMMANDS: readonly CommandItem[] = [
     label: "Mode Eco",
     action: "mode",
     fixedParams: { mode: "eco" },
-    variant: "destructive",
+    classname:
+      "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20",
   },
   {
     label: "Mode Normal",
     action: "mode",
     fixedParams: { mode: "normal" },
-    variant: "destructive",
+    classname:
+      "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20",
   },
   {
-    label: "Mode Speed",
+    label: "Mode Sport",
     action: "mode",
-    fixedParams: { mode: "speed" },
-    variant: "destructive",
+    fixedParams: { mode: "sport" },
+    classname:
+      "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20",
   },
 ];
+
+// Group commands by category
+export const COMMAND_GROUPS = [
+  {
+    title: "Basic Controls",
+    description: "Start and stop operations",
+    commands: COMMANDS.filter((cmd) => ["start", "stop"].includes(cmd.action)),
+    defaultOpen: true,
+  },
+  {
+    title: "Motion Controls",
+    description: "Control acceleration and movement",
+    commands: COMMANDS.filter((cmd) => cmd.action === "accelerate"),
+    defaultOpen: true,
+  },
+  {
+    title: "Mode Selection",
+    description: "Switch between operating modes",
+    commands: COMMANDS.filter((cmd) => cmd.action === "mode"),
+    defaultOpen: false,
+  },
+] as const;
