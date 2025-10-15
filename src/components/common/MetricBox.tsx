@@ -41,7 +41,7 @@ const MetricBox = ({
 
   const runFlashAnimation = useCallback(() => {
     cardRef.current?.animate(valueChangedAnimation, {
-      duration: 1000,
+      duration: 500,
       easing: "ease-out",
     });
   }, []);

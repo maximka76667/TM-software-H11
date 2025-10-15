@@ -79,8 +79,6 @@ export const isISODateString = (str: string): boolean => {
     return false;
   }
 
-  console.log("String matches ISO 8601 format", str);
-
   const date = new Date(str);
   return !isNaN(date.getTime());
 };
